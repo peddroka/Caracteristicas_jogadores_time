@@ -1,0 +1,482 @@
+:root {
+  --preto: #0d0d0d;
+  --cinza: #1a1a1a;
+  --branco: #fff;
+
+  --dourado-claro: #ffe082;
+  --dourado-medio: #d4af37;
+  --dourado-fraco: #736b3c;
+
+  --dourado-mais-forte: #bfa329;
+  --dourado-forte: #d4af37;
+  --dourado-medio-forte: #c1a93b;
+  --dourado-medio-fraco: #aa9433;
+  --dourado-fraco-cor: #736b3c;
+
+  --comparacao-destaque: #70e000; /* verde claro para mostrar o melhor */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--preto);
+  color: var(--branco);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+.logo-guaras {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.titulo-guaras {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--dourado-medio);
+}
+
+.jogadores-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* === ESTILO BASE DOS CARDS DE JOGADORES === */
+.jogador-card {
+  position: relative;
+  background-color: var(--cinza); /* fundo preto/cinza padrão */
+  border: 2px solid var(--dourado-medio); /* borda dourada padrão */
+  border-radius: 16px;
+  padding: 12px;
+  padding-top: 30px; /* espaço extra pro OVR */
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* HOVER PADRÃO */
+.jogador-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+/* === LABEL OVERALL === */
+.overall-label {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: var(--preto);
+  background-color: #d4af37; /* padrão */
+  z-index: 5;
+}
+
+/* Cores do OVR por faixa */
+.jogador-card.overall-90 .overall-label {
+  background: linear-gradient(
+    90deg,
+    #ffe082 10%,
+    #d4af37 30%,
+    #bfa329 50%,
+    #d4af37 70%,
+    #ffe082 90%
+  );
+  background-size: 200% 100%;
+  animation: brilhoDegradeMelhorado 10s linear infinite;
+  color: #000;
+  box-shadow: 0 0 10px #ffe082, 0 0 20px #d4af37, 0 0 30px #bfa329;
+  border-radius: 8px;
+  font-weight: 700;
+}
+.jogador-card.overall-80 .overall-label {
+  background-color: #d4af37; /* dourado padrão */
+  color: #000;
+}
+
+.jogador-card.overall-70 .overall-label {
+  background-color: #b87333; /* cobre */
+  color: #fff;
+}
+
+.jogador-card.overall-60 .overall-label {
+  background-color: #aaa; /* cinza claro */
+  color: #000;
+}
+
+.jogador-card.overall-50 .overall-label {
+  background-color: #4b3621; /* marrom coco */
+  color: #fff;
+}
+
+/* FOTO */
+.foto-card {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid var(--dourado-medio);
+  margin-bottom: 10px;
+}
+
+.apelido {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--dourado-claro);
+  margin-bottom: 12px;
+}
+
+/* BOTAO COMPARAR */
+.btn-comparar {
+  margin-top: auto;
+  background-color: var(--dourado-medio);
+  border: none;
+  padding: 8px 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  color: var(--preto);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 140px;
+  align-self: center;
+}
+
+.btn-comparar:hover {
+  background-color: var(--dourado-mais-forte);
+}
+
+.btn-comparar.selecionado {
+  background-color: #ffaa00;
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 0 10px #ffaa00;
+}
+
+/* OVERLAY INFORMAÇÕES JOGADOR */
+.jogador-info-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(13, 13, 13, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 15px;
+}
+
+.jogador-info-overlay.ativo {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.info-conteudo {
+  background-color: var(--cinza);
+  border: 2px solid var(--dourado-medio);
+  border-radius: 15px;
+  padding: 30px 25px 25px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+  color: var(--branco);
+  position: relative;
+  animation: aparecer 0.4s ease;
+}
+
+.info-conteudo img {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid var(--dourado-medio);
+  margin-bottom: 15px;
+}
+
+.info-conteudo h2 {
+  font-size: 1.4rem;
+  color: var(--dourado-claro);
+  margin-bottom: 10px;
+}
+
+.info-conteudo p {
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+/* OVERALL NO CANTO DO CARD */
+.overall-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: var(--dourado-medio);
+  color: var(--preto);
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  border-radius: 8px;
+  z-index: 2;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+/* Botão fechar */
+.btn-fechar {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--branco);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.btn-fechar:hover {
+  color: var(--dourado-claro);
+}
+
+/* Atributos */
+.atributos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.atributo label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.barra {
+  width: 100%;
+  height: 16px;
+  background-color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.barra-preenchimento {
+  height: 100%;
+  width: 0%;
+  background-color: var(--dourado-medio);
+  transition: width 1.2s ease;
+  border-radius: 8px;
+}
+
+/* COMPARAÇÃO */
+.comparacao-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(13, 13, 13, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 15px;
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+
+.comparacao-overlay.ativo {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.comparacao-cards-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  gap: 20px;
+}
+
+.comparacao-card {
+  background-color: var(--cinza);
+  border-radius: 15px;
+  border: 2px solid var(--dourado-medio);
+  padding: 25px 20px 20px;
+  width: 100%;
+  max-width: 460px;
+  min-width: 300px;
+  height: auto;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: var(--branco);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.comparacao-card h2 {
+  font-size: 1.3rem;
+  color: var(--dourado-claro);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.comparacao-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid var(--dourado-medio);
+  margin: 0 auto 15px;
+  display: block;
+}
+
+.comparacao-atributos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comparacao-atributo {
+  display: flex;
+  flex-direction: column;
+}
+
+.comparacao-atributo label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  color: var(--branco);
+}
+
+.comparacao-barra {
+  width: 100%;
+  height: 14px;
+  background-color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.comparacao-barra-preenchimento {
+  height: 100%;
+  width: 0%;
+  background-color: var(--dourado-medio);
+  border-radius: 8px;
+  transition: width 1.2s ease;
+}
+
+.comparacao-barra-preenchimento.destaque {
+  background-color: var(--comparacao-destaque);
+}
+
+/* RESPONSIVO - COMPARAÇÃO LADO A LADO NO DESKTOP */
+@media (min-width: 901px) {
+  .comparacao-cards-container {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .comparacao-card {
+    max-width: 48%;
+  }
+}
+
+/* RESPONSIVO - MOBILE */
+@media (max-width: 600px) {
+  .jogadores-container {
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center; /* centraliza os cards */
+    gap: 16px; /* opcional: reduz um pouco o espaço */
+  }
+
+  .jogador-card {
+    padding-top: 26px; /* reduz um pouco o topo para o overall */
+  }
+
+  .foto-card {
+    border-radius: 10px;
+  }
+
+  .apelido {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+
+  .btn-comparar {
+    margin-top: auto;
+    background-color: var(--dourado-medio);
+    border: none;
+    padding: 8px 15px;
+    font-weight: 600;
+    border-radius: 12px;
+    color: var(--preto);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    max-width: 140px;
+    text-align: center; /* Centraliza o texto */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* CENTRALIZA de verdade */
+  }
+
+  .comparacao-cards-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .comparacao-card {
+    max-width: 95vw;
+    max-height: unset; /* Remove limitação que fazia rolar */
+    overflow-y: visible;
+    margin-bottom: 20px;
+  }
+  .overall-label {
+    font-size: 1rem;
+    padding: 3px 15px;
+    top: 6px;
+    left: 6px;
+  }
+}
+@keyframes brilhoDegradeMelhorado {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
