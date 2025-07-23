@@ -157,6 +157,9 @@ header {
   );
   background-size: 200% 100%;
   animation: brilho-animado 4s linear infinite;
+
+  /* ESSENCIAL PARA NÃO BLOQUEAR CLIQUES */
+  pointer-events: none;
   z-index: 0;
 }
 
