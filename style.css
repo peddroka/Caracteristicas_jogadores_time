@@ -188,6 +188,100 @@ header {
   font-weight: bold;
 }
 
+/* BRILHO DOURADO CORRIGIDO */
+.jogador-card.campeao {
+  position: relative;
+  overflow: hidden; /* 🔑 Essencial para cortar o excesso do ::before */
+  border-radius: 8px; /* ajuste conforme o seu card */
+}
+
+/* CAMPEÃO - Brilho mais elegante */
+.jogador-card.campeao {
+  position: relative;
+  overflow: hidden;
+}
+
+.jogador-card.campeao::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -55%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 215, 0, 0) 0%,
+    rgba(255, 215, 0, 0.4) 50%,
+    rgba(255, 215, 0, 0) 100%
+  );
+  transform: skewX(-20deg);
+  animation: brilho-rápido 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+@keyframes brilho-rápido {
+  0% {
+    left: -75%;
+  }
+  50% {
+    left: 125%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+
+.jogador-card.lendario {
+  position: relative;
+  overflow: hidden;
+  border: 3px solid #d4af37; /* dourado */
+  border-radius: 25px 25px 10px 10px; /* formato especial */
+  background: linear-gradient(145deg, #fff8dc, #f6e27f);
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+  z-index: 1;
+}
+
+/* Efeito de brilho dourado animado por cima */
+.jogador-card.lendario::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 215, 0, 0) 0%,
+    rgba(255, 215, 0, 0.25) 50%,
+    rgba(255, 215, 0, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: brilho-animado 4s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Coroa opcional com imagem */
+.jogador-card.lendario .coroa-icon {
+  position: absolute;
+  top: -1px;
+  right: 5px;
+  width: 40px;
+  height: auto;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Badge de overall mais chamativo */
+.jogador-card.lendario .overall-label {
+  background: linear-gradient(135deg, #ffd700, #fff5cc);
+  color: #222;
+  border: 2px solid #d4af37;
+  font-weight: bold;
+}
+
 /* FOTO */
 .foto-card {
   width: 100%;
@@ -201,7 +295,7 @@ header {
 .apelido {
   font-weight: 700;
   font-size: 1.15rem;
-  color: var(--dourado-claro);
+  color: var(--dourado-medio);
   margin-bottom: 12px;
 }
 
@@ -529,7 +623,6 @@ header {
   }
 }
 
-/* Modal */
 .modal {
   position: fixed;
   top: 0;
@@ -570,60 +663,10 @@ header {
   background-color: #444;
 }
 
-/* Oculta elementos */
 .oculto {
   display: none !important;
 }
 
-/* Área para selecionar jogadores */
-#selecionar-jogadores {
-  margin-top: 20px;
-  text-align: left;
-}
-
-#selecionar-jogadores p {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-/* Lista dos jogadores */
-#lista-jogadores {
-  max-height: 250px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #fafafa;
-}
-
-#lista-jogadores label {
-  display: block;
-  padding: 6px 10px;
-  cursor: pointer;
-  user-select: none;
-  font-size: 16px;
-}
-
-/* Botão para sortear times */
-#btn-sortear-final {
-  margin-top: 15px;
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 18px;
-  transition: background-color 0.3s ease;
-  width: 100%;
-}
-
-#btn-sortear-final:disabled {
-  background: #aaa;
-  cursor: not-allowed;
-}
-
-/* Resultado times */
 #resultado-times {
   margin: 30px auto;
   max-width: 800px;
@@ -650,24 +693,6 @@ header {
   font-size: 1.1rem;
 }
 
-/* Cards selecionáveis */
-.jogador-card.selecionavel {
-  cursor: pointer;
-  transition: transform 0.2s ease, outline 0.2s ease;
-  outline: 3px solid transparent;
-}
-
-.jogador-card.selecionavel:hover {
-  transform: scale(1.03);
-  outline-color: #007bffaa;
-}
-
-.jogador-card.selecionado {
-  outline: 3px solid #007bff;
-  box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
-}
-
-/* Animação brilho para aposentados (caso queira usar) */
 @keyframes brilhoDegradeMelhorado {
   0% {
     background-position: 0% 50%;
@@ -676,7 +701,6 @@ header {
     background-position: 200% 50%;
   }
 }
-
 @keyframes brilho-animado {
   0% {
     background-position: -200% 0;
